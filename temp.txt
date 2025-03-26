@@ -1,1 +1,17 @@
 
+Issue Summary:
+There are two observed issues with the current implementation of the MySSO integration with the streamlet UI application.
+
+Observation 1:
+Upon logging out from the streamlet application, the expected behavior is to terminate the user session without further authentication prompts. However, currently, clicking the “Logout” button redirects the user back to the FingFed authentication page, triggering another push notification via the FingID mobile app. This additional authentication step upon logout is redundant and seems incorrect.
+
+Expected Behavior:
+Logging out should immediately terminate the session without prompting the user for further authentication via FingFed or FingID.
+
+Observation 2:
+After a successful login and logout on one day, subsequent access to the application URL on the following day bypasses the FingFed authentication entirely, including skipping the FingID mobile push notification step. The application directly logs in without requesting any username, password, or mobile app verification.
+
+Expected Behavior:
+Each new daily session or session after logout should prompt the user to authenticate again via MySSO (FingFed and FingID verification).
+
+Both behaviors described above deviate from expected MySSO integration standards and security practices, potentially indicating session management or caching issues within the authentication mechanism.
