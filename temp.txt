@@ -21,3 +21,12 @@
 
 <logger name="org.hibernate.SQL" level="WARN"/>
 
+
+for ($i = 1; $i -le 100; $i++) {
+    Write-Host "Running API call #$i"
+    bruno run "C:\Path\To\Your\Request.bru"
+}
+
+.\run-api.ps1
+
+
