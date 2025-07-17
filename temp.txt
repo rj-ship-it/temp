@@ -1,1 +1,23 @@
+<configuration>
+  …
+  <!-- Suppress SQL statement logging -->
+  <logger name="org.hibernate.SQL" level="WARN"/>
+  <!-- Suppress bind-parameter values -->
+  <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="WARN"/>
+
+  <!-- If you’re seeing Spring JDBC data logs: -->
+  <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="WARN"/>
+  <logger name="org.springframework.jdbc.core.JdbcTemplate" level="WARN"/>
+
+  <!-- And any Snowflake-driver chatter: -->
+  <logger name="net.snowflake" level="WARN"/>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="GCP"/>
+  </root>
+</configuration>
+
+
+<logger name="org.hibernate.SQL" level="WARN"/>
 
