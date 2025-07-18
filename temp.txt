@@ -1,32 +1,16 @@
-<configuration>
-  …
-  <!-- Suppress SQL statement logging -->
-  <logger name="org.hibernate.SQL" level="WARN"/>
-  <!-- Suppress bind-parameter values -->
-  <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="WARN"/>
+Thank you for your earlier guidance.
 
-  <!-- If you’re seeing Spring JDBC data logs: -->
-  <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="WARN"/>
-  <logger name="org.springframework.jdbc.core.JdbcTemplate" level="WARN"/>
+As advised, we have upgraded the Snowflake JDBC driver to version 3.21.1 and added the following parameters to the connection string:
+	•	JAVA_LOGGING_CONSOLE_STDOUT=true
+	•	JAVA_LOGGING_CONSOLE_STDOUT_THRESHOLD=FINEST
 
-  <!-- And any Snowflake-driver chatter: -->
-  <logger name="net.snowflake" level="WARN"/>
+While we do see a log file generated locally when using tracing=ALL, we are specifically trying to redirect tracing logs to the console so they appear in GCP Cloud Run logs. However, after applying the above configuration, we still do not see the detailed tracing logs in the console, even in local testing.
 
-  <root level="INFO">
-    <appender-ref ref="CONSOLE"/>
-    <appender-ref ref="GCP"/>
-  </root>
-</configuration>
+Could you please confirm if there are any additional steps or configurations required to get tracing logs to appear in the standard output?
 
+To expedite the resolution, we would also like to request a short troubleshooting session with your team to walk through the setup live and ensure everything is correctly configured.
 
-<logger name="org.hibernate.SQL" level="WARN"/>
+Please let us know your availability for a 30-minute call. We’re happy to align based on your schedule.
 
-
-for ($i = 1; $i -le 100; $i++) {
-    Write-Host "Running API call #$i"
-    bruno run "C:\Path\To\Your\Request.bru"
-}
-
-.\run-api.ps1
-
+Best regards,
 
