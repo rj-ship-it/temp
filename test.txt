@@ -1,2 +1,5 @@
+I am currently contributing to the MDH project, focusing on the API conversion effort from .NET to Java. As part of this work, I am actively engaged in the migration of the Calendars API, which consists of 11 endpoints, to a new Spring-based API implementation. This migration is a critical step, and we anticipate that many additional APIs will follow as part of the broader modernization initiative.
 
-cf push abc -p target/anc-0.0.1-SNAPSHOT.jar -m 1024M -k 1024M -b java_buildpack_offline
+Prior to this assignment, I was contributing to the SAMHDA project, and once the MDH migration is completed, I will resume my responsibilities there. My work in SAMHDA includes both Control-M workflows and Java API implementation, supporting the overall system integration and operational needs.
+
+This combination of ongoing migration efforts in MDH and continued contributions to SAMHDA ensures that I remain fully aligned with the organization’s modernization objectives and long-term technology strategy.
