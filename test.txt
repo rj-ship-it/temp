@@ -1,5 +1,73 @@
-I am currently contributing to the MDH project, focusing on the API conversion effort from .NET to Java. As part of this work, I am actively engaged in the migration of the Calendars API, which consists of 11 endpoints, to a new Spring-based API implementation. This migration is a critical step, and we anticipate that many additional APIs will follow as part of the broader modernization initiative.
+-- NULL business flag that HAVE a company relation (should become TRUE)
+select count(*) as null_to_true
+from credit_card_accounts a
+where a.is_business_account is null
+  and exists (
+        select 1 from credit_card_company_account_relations r
+        where r.account_id = a.account_id
+  );
 
-Prior to this assignment, I was contributing to the SAMHDA project, and once the MDH migration is completed, I will resume my responsibilities there. My work in SAMHDA includes both Control-M workflows and Java API implementation, supporting the overall system integration and operational needs.
+-- NULL business flag that DO NOT have a company relation (should become FALSE)
+select count(*) as null_to_false
+from credit_card_accounts a
+where a.is_business_account is null
+  and not exists (
+        select 1 from credit_card_company_account_relations r
+        where r.account_id = a.account_id
+  );
 
-This combination of ongoing migration efforts in MDH and continued contributions to SAMHDA ensures that I remain fully aligned with the organization’s modernization objectives and long-term technology strategy.
+begin;
+
+-- Optional: keep an audit of rows being changed
+create temporary table _acct_business_fix_audit as
+select a.account_id,
+       a.is_business_account as old_is_business_account,
+       case when exists (
+                 select 1 from credit_card_company_account_relations r
+                 where r.account_id = a.account_id
+            )
+            then true else false end as new_is_business_account
+from credit_card_accounts a
+where a.is_business_account is null;
+
+-- Update all NULLs based on relation existence
+update credit_card_accounts a
+set is_business_account = case
+    when exists (
+         select 1 from credit_card_company_account_relations r
+         where r.account_id = a.account_id
+    ) then true
+    else false
+end
+where a.is_business_account is null;
+
+commit;
+
+========
+-- Company accounts -> TRUE
+update credit_card_accounts a
+set is_business_account = true
+where a.is_business_account is null
+  and exists (select 1 from credit_card_company_account_relations r
+              where r.account_id = a.account_id);
+
+-- Consumer accounts -> FALSE
+update credit_card_accounts a
+set is_business_account = false
+where a.is_business_account is null
+  and not exists (select 1 from credit_card_company_account_relations r
+                  where r.account_id = a.account_id);
+
+======
+
+-- Should be zero after the fix
+select count(*) as remaining_nulls
+from credit_card_accounts
+where is_business_account is null;
+
+-- Sanity: spot check distribution
+select is_business_account, count(*)
+from credit_card_accounts
+group by is_business_account;
+
+
