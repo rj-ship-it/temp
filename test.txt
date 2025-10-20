@@ -1,3 +1,12 @@
+
+While reviewing the schema, I noticed that the column already has a default value set to false, but I don’t see a NOT NULL constraint defined on it.
+Since the data is now corrected and the code ensures valid values, this might be a good time to add that constraint for better data integrity.
+
+If you can take care of adding this schema correction along with the data patch release, that would be great — it’ll help keep things consistent going forward.
+
+
+
+
 -- NULL business flag that HAVE a company relation (should become TRUE)
 select count(*) as null_to_true
 from credit_card_accounts a
