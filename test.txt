@@ -1,4 +1,48 @@
 
+BEGIN;
+
+WITH batch AS (
+    SELECT a.account_id
+    FROM credit_card_accounts a
+    WHERE a.is_business_account IS NULL
+      AND EXISTS (
+          SELECT 1 
+          FROM credit_card_company_account_relations r
+          WHERE r.account_id = a.account_id
+      )
+    LIMIT 50000          -- adjust batch size (start small)
+)
+UPDATE credit_card_accounts a
+SET is_business_account = TRUE
+FROM batch
+WHERE a.account_id = batch.account_id;
+
+COMMIT;
+
+
+BEGIN;
+
+WITH batch AS (
+    SELECT a.account_id
+    FROM credit_card_accounts a
+    WHERE a.is_business_account IS NULL
+      AND NOT EXISTS (
+          SELECT 1 
+          FROM credit_card_company_account_relations r
+          WHERE r.account_id = a.account_id
+      )
+    LIMIT 50000
+)
+UPDATE credit_card_accounts a
+SET is_business_account = FALSE
+FROM batch
+WHERE a.account_id = batch.account_id;
+
+COMMIT;
+
+
+
+===================
 While reviewing the schema, I noticed that the column already has a default value set to false, but I don’t see a NOT NULL constraint defined on it.
 Since the data is now corrected and the code ensures valid values, this might be a good time to add that constraint for better data integrity.
 
