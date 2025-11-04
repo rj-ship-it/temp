@@ -1,1 +1,12 @@
 
+
+# Define start and end times in UTC
+$start = (Get-Date -Hour 0 -Minute 0 -Second 0).ToUniversalTime()
+$end = (Get-Date).ToUniversalTime()
+
+# Convert to Unix epoch milliseconds
+$startEpoch = [int64]($start.ToFileTimeUtc() / 10000 - 11644473600000)
+$endEpoch = [int64]($end.ToFileTimeUtc() / 10000 - 11644473600000)
+
+# Run cf tail to capture today's logs
+cf tail abc --envelope-type LOG --start-time $startEpoch --end-time $endEpoch > todays-logs.txt
